@@ -17,35 +17,16 @@ class TsvService {
         rs = row[tsvTable.rs] )
 
 
-    //метод slice для множественного селекта
-//    suspend fun getRS(s: String, i: Int, s1: String, i1: Int) {
-//      val str = tsvTable.slice( tsvTable.contig, tsvTable.left, tsvTable.right, tsvTable.mutation)
-//            tsvTable.select { tsvTable.left eq  i }.map { toTsv(it) }
-//            }
-
-//     fun findBy(contig: String, left: Int, right: Int, mutation: String): ResultRow {
-//         val row = transaction {
-//             addLogger(StdOutSqlLogger)
-//             tsvTable.select {
-//                 tsvTable.contig eq contig
-//                 tsvTable.left eq left
-//                 tsvTable.right eq right
-//                 tsvTable.mutation eq mutation
-//
-//             }.first()
-//         }
-//        return row
-//     }
 
     fun findBy(Contig: String, Left: Int,  Mutation: String, Right: Int): Tsv =
         transaction(transactionIsolation = Connection.TRANSACTION_SERIALIZABLE , repetitionAttempts = 0) {
             with(tsvTable) {
                 slice(rs)
                     .select {
-                        contig eq Contig
-                        left eq Left
-                        right eq Right
-                        mutation eq Mutation
+                        contig.eq(Contig) and
+                                left.eq(Left) and
+                                right.eq(Right) and
+                                mutation.eq(Mutation)
                     }
                     .map { toTsv(it) }
                     .first()
