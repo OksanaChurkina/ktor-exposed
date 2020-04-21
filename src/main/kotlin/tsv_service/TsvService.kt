@@ -18,8 +18,9 @@ class TsvService {
 
 
 
-    fun findBy(Contig: String, Left: Int,  Mutation: String, Right: Int): Tsv =
-        transaction(transactionIsolation = Connection.TRANSACTION_SERIALIZABLE , repetitionAttempts = 0) {
+    fun findBy(Contig: String, Left: Int,  Mutation: String, Right: Int): List<Tsv> =
+        transaction(transactionIsolation = Connection.TRANSACTION_SERIALIZABLE ,
+            repetitionAttempts = 0) {
             with(tsvTable) {
                 slice(rs)
                     .select {
@@ -29,7 +30,7 @@ class TsvService {
                                 mutation.eq(Mutation)
                     }
                     .map { toTsv(it) }
-                    .first()
+
             }
 
         }
