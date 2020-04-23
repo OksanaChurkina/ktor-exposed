@@ -1,6 +1,7 @@
 package tsv_service
 
 import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 import tsv_model.Tsv
 import tsv_model.tsvTable
@@ -18,25 +19,22 @@ class TsvService {
 
 
 
-    fun findBy(Contig: String, Left: Int,  Mutation: String, Right: Int): String {
-        transaction(transactionIsolation = 8 ,
-                repetitionAttempts = 0) {
-            with(tsvTable) {
-                slice(rs)
-                        .select {
-                            contig.eq(Contig) and
-                                    left.eq(Left) and
-                                    right.eq(Right) and
-                                    mutation.eq(Mutation)
-                        }
-                        .map { toTsv(it) }
-
-            }
-
+    fun findBy(Contig: String, Left: Int,  Mutation: String, Right: Int)  =
+         transaction(transactionIsolation = 8 ,
+             repetitionAttempts = 0) {
+            tsvTable.select {
+                tsvTable.contig.eq(Contig) and
+                        tsvTable.left.eq(Left) and
+                        tsvTable.right.eq(Right) and
+                        tsvTable.mutation.eq(Mutation)
+           }
+          .map { toTsv(it) }
+                .first()
         }
-        return tsvTable.rs.toString()
+
     }
-    }
+
+
 
 
 
