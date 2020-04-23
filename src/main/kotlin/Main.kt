@@ -9,15 +9,20 @@ import io.ktor.jackson.jackson
 import io.ktor.features.ContentNegotiation
 import io.ktor.features.DefaultHeaders
 import io.ktor.gson.gson
+import io.ktor.http.ContentType
 import io.ktor.response.respond
+import io.ktor.response.respondText
 import io.ktor.routing.Routing
 import io.ktor.routing.get
+import io.ktor.routing.post
 import io.ktor.routing.route
 import io.ktor.server.engine.ConnectorType
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import org.jetbrains.exposed.sql.Database
+import tsv_model.Tsv
 import tsv_model.tsvTable
+import tsv_model.tsvTable.rs
 import tsv_service.DbFactory
 import tsv_service.TsvService
 
@@ -53,19 +58,14 @@ fun Application.mainModule(){
 
     val tsvService = TsvService()
     install(Routing) {
-        //tsvService.getRS("chr42", 9414470, "A", 9414473)
-        val rs =    tsvService.findBy("chr42", 9414470, "A" ,9414473)
-        val s =  print(rs)
-        //val s = tsvService.show("rs1393520178")
+
+    val rs =  tsvService.findBy("chr42", 9414470, "A" ,9414473)
         get("/") {
-            //val rs = call.parameters["rs"].toString()
-            call.respond(mapOf("rs" to rs))
-            //call.respond(mapOf("rs" to rs.toString()))
+            call.respondText(rs, ContentType.Text.Plain)
+            //
 
         }
-//        get("/") {
-//            call.respond(mapOf("hello" to "world"))
-//        }
+
     }
 
 }
