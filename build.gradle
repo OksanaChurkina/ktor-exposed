@@ -27,6 +27,7 @@ dependencies {
 
     compile "io.ktor:ktor-server-netty:$ktor_version"
     compile "io.ktor:ktor-jackson:$ktor_version"
+    compile "io.ktor:ktor-gson:$ktor_version"
     compile "io.ktor:ktor-websockets:$ktor_version"
     compile group: 'com.univocity', name: 'univocity-parsers', version: '2.1.1'
 

@@ -18,22 +18,24 @@ class TsvService {
 
 
 
-    fun findBy(Contig: String, Left: Int,  Mutation: String, Right: Int): List<Tsv> =
-        transaction(transactionIsolation = Connection.TRANSACTION_SERIALIZABLE ,
-            repetitionAttempts = 0) {
+    fun findBy(Contig: String, Left: Int,  Mutation: String, Right: Int): String {
+        transaction(transactionIsolation = 8 ,
+                repetitionAttempts = 0) {
             with(tsvTable) {
                 slice(rs)
-                    .select {
-                        contig.eq(Contig) and
-                                left.eq(Left) and
-                                right.eq(Right) and
-                                mutation.eq(Mutation)
-                    }
-                    .map { toTsv(it) }
+                        .select {
+                            contig.eq(Contig) and
+                                    left.eq(Left) and
+                                    right.eq(Right) and
+                                    mutation.eq(Mutation)
+                        }
+                        .map { toTsv(it) }
 
             }
 
         }
+        return tsvTable.rs.toString()
+    }
     }
 
 
