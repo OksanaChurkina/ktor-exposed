@@ -53,12 +53,12 @@ fun Application.mainModule(){
     val tsvService = TsvService()
     install(Routing) {
 
-        val rs  =  tsvService.findBy("chr42", 9411243, "A", 9411246)
+        val rs  =  tsvService.findBy("chr42", 9411246, "G", 9411250)
 
         get("/") {
-            //  tsvService.findBy("chr42", 9411246, "T", 9411249)
 
-            call.respondText(rs.toString(), ContentType.Text.Plain)
+            call.respond(mapOf("RS-identifier" to rs))
+
 
         }
 
