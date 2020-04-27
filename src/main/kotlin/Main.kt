@@ -11,6 +11,7 @@ import io.ktor.features.DefaultHeaders
 import io.ktor.gson.gson
 import io.ktor.http.ContentType
 import io.ktor.http.Parameters
+import io.ktor.locations.Location
 import io.ktor.locations.Locations
 import io.ktor.locations.get
 import io.ktor.locations.locations
@@ -26,6 +27,14 @@ import tsv_model.tsvTable.contig
 import tsv_service.DbFactory
 import tsv_service.TsvService
 
+
+@Location("/contig/{contig}/leftInclusiveZeroBasedBoundary/{left}/sequence/{mutation}/RightExclusiveZeroBasedBoundary/{right}") class tsv(
+          val contig: String,
+          val left: Int,
+         val mutation: String?,
+          val right: Int
+       // val rs: String
+)
 
 fun Application.mainModule(){
     install(DefaultHeaders)
@@ -61,13 +70,14 @@ fun Application.mainModule(){
     val tsvService = TsvService()
     install(Routing) {
 
-     get<Tsv>{tsv->
 
-        val rs = tsvService.findBy(tsv.contig, tsv.left, tsv.mutation.toString(), tsv.right)
-         call.respond(mapOf("RS-identifier" to rs))
+        get<tsv>{
+            tsv ->
 
+            val rs = tsvService.findBy(tsv.contig, tsv.left,  tsv.mutation.toString(), tsv.right)
+               call.respond(mapOf("RS-identifier" to rs))
 
-    }
+        }
 
 }
 }
