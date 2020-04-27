@@ -11,6 +11,9 @@ import io.ktor.features.DefaultHeaders
 import io.ktor.gson.gson
 import io.ktor.http.ContentType
 import io.ktor.http.Parameters
+import io.ktor.locations.Locations
+import io.ktor.locations.get
+import io.ktor.locations.locations
 import io.ktor.response.respond
 import io.ktor.response.respondText
 import io.ktor.routing.Routing
@@ -18,6 +21,8 @@ import io.ktor.routing.get
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import org.jetbrains.exposed.sql.Database
+import tsv_model.Tsv
+import tsv_model.tsvTable.contig
 import tsv_service.DbFactory
 import tsv_service.TsvService
 
@@ -25,6 +30,7 @@ import tsv_service.TsvService
 fun Application.mainModule(){
     install(DefaultHeaders)
     install(CallLogging)
+    install(Locations)
 
 
     install(ContentNegotiation){
@@ -35,6 +41,7 @@ fun Application.mainModule(){
 
             setPrettyPrinting()
         }
+
     }
 
     val hikari = HikariDataSource(HikariConfig().apply {
@@ -54,28 +61,16 @@ fun Application.mainModule(){
     val tsvService = TsvService()
     install(Routing) {
 
-       tsvService.findBy("chr42", 9411247, "A", 9411250)
+     get<Tsv>{tsv->
 
+        val rs = tsvService.findBy(tsv.contig, tsv.left, tsv.mutation.toString(), tsv.right)
+         call.respond(mapOf("RS-identifier" to rs))
 
-        get("/{Contig}/{Left}/{Mutation}/{Right}" ) {
-
-            val contig = call.parameters["Contig"]
-            val l = call.parameters["Left"]
-            val mut = call.parameters["Mutation"]
-            val rigth = call.parameters["Right"]
-            val rs  =  tsvService.findBy(contig.toString(), l?.toInt()!!,  mut.toString(), rigth?.toInt()!!)
-
-             call.respond(mapOf("RS-identifier" to rs))
-
-
-        }
 
     }
 
 }
-
-
-
+}
 
 fun main(){
     val port = 8080

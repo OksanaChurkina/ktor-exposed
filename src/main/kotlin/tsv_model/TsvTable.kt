@@ -12,7 +12,7 @@ object tsvTable: Table(){
 }
 
 
-@Location("annotation/{rs}/contig/{contig}/leftInclusiveZeroBasedBoundary/{left}/rightExclusiveZeroBasedBoundary/{right}/sequence/{mutation}")
+@Location("/annotation/{rs}/contig/{contig}/leftInclusiveZeroBasedBoundary/{left}/rightExclusiveZeroBasedBoundary/{right}/sequence/{mutation}")
 data class Tsv(val contig: String ,
                val left: Int,
                val mutation: String?,
