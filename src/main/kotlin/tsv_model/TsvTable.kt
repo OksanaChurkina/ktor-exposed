@@ -1,5 +1,6 @@
 package tsv_model
 
+import io.ktor.locations.Location
 import org.jetbrains.exposed.sql.Table
 
 object tsvTable: Table(){
@@ -11,6 +12,7 @@ object tsvTable: Table(){
 }
 
 
+@Location("annotation/{rs}/contig/{contig}/leftInclusiveZeroBasedBoundary/{left}/rightExclusiveZeroBasedBoundary/{right}/sequence/{mutation}")
 data class Tsv(val contig: String ,
                val left: Int,
                val mutation: String?,

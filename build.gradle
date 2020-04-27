@@ -22,6 +22,7 @@ ext.exposed_version = '0.23.1'
 ext.h2_version = '1.4.200'
 
 dependencies {
+    implementation "io.ktor:ktor-locations:$ktor_version"
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
