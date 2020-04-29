@@ -28,13 +28,14 @@ import tsv_service.DbFactory
 import tsv_service.TsvService
 
 
-@Location("/contig/{contig}/leftInclusiveZeroBasedBoundary/{left}/sequence/{mutation}/RightExclusiveZeroBasedBoundary/{right}") class tsv(
-          val contig: String,
-          val left: Int,
-         val mutation: String?,
-          val right: Int
-       // val rs: String
+
+@Location("/annotation/contig/{contig}") data class tsv(
+        val contig: String,
+        val leftInclusiveZeroBasedBoundary: Int,
+        val rightExclusiveZeroBasedBoundary: Int,
+        val sequence: String?
 )
+
 
 fun Application.mainModule(){
     install(DefaultHeaders)
@@ -73,10 +74,8 @@ fun Application.mainModule(){
 
         get<tsv>{
             tsv ->
-
-            val rs = tsvService.findBy(tsv.contig, tsv.left,  tsv.mutation.toString(), tsv.right)
+            val rs = tsvService.findBy(tsv.contig, tsv.leftInclusiveZeroBasedBoundary,  tsv.sequence.toString(), tsv.rightExclusiveZeroBasedBoundary)
                call.respond(mapOf("RS-identifier" to rs))
-
         }
 
 }
