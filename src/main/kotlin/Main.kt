@@ -9,31 +9,23 @@ import io.ktor.jackson.jackson
 import io.ktor.features.ContentNegotiation
 import io.ktor.features.DefaultHeaders
 import io.ktor.gson.gson
-import io.ktor.http.ContentType
-import io.ktor.http.Parameters
 import io.ktor.locations.Location
 import io.ktor.locations.Locations
 import io.ktor.locations.get
-import io.ktor.locations.locations
 import io.ktor.response.respond
-import io.ktor.response.respondText
 import io.ktor.routing.Routing
-import io.ktor.routing.get
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import org.jetbrains.exposed.sql.Database
-import tsv_model.Tsv
-import tsv_model.tsvTable.contig
 import tsv_service.DbFactory
 import tsv_service.TsvService
 
 
-
-@Location("/annotation/contig/{contig}") data class tsv(
+@Location("/annotation/") data class tsv(
         val contig: String,
         val leftInclusiveZeroBasedBoundary: Int,
         val rightExclusiveZeroBasedBoundary: Int,
-        val sequence: String?
+        val sequence: String
 )
 
 
@@ -51,7 +43,6 @@ fun Application.mainModule(){
 
             setPrettyPrinting()
         }
-
     }
 
     val hikari = HikariDataSource(HikariConfig().apply {
@@ -74,10 +65,9 @@ fun Application.mainModule(){
 
         get<tsv>{
             tsv ->
-            val rs = tsvService.findBy(tsv.contig, tsv.leftInclusiveZeroBasedBoundary,  tsv.sequence.toString(), tsv.rightExclusiveZeroBasedBoundary)
+            val rs = tsvService.findBy(tsv.contig, tsv.leftInclusiveZeroBasedBoundary,  tsv.sequence, tsv.rightExclusiveZeroBasedBoundary)
                call.respond(mapOf("RS-identifier" to rs))
         }
-
 }
 }
 
