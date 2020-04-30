@@ -21,7 +21,7 @@ import tsv_service.DbFactory
 import tsv_service.TsvService
 
 
-@Location("/annotation/") data class tsv(
+@Location("/annotation") data class tsv(
         val contig: String,
         val leftInclusiveZeroBasedBoundary: Int,
         val rightExclusiveZeroBasedBoundary: Int,
@@ -57,9 +57,8 @@ fun Application.mainModule(){
 
     Database.connect(hikari)
     DbFactory.init()
-
-
     val tsvService = TsvService()
+
     install(Routing) {
 
 
