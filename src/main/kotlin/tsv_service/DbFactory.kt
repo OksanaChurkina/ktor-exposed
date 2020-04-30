@@ -27,7 +27,7 @@ object DbFactory {
                 this[left] = it[1].toInt()
                 this[right] = it[2].toInt()
                 if(it[3].isNullOrEmpty()){
-                    this[mutation] = it[3].let { " " }
+                    this[mutation] = it[3].let { "" }
                 } else
                 {this[mutation] = it[3]}
                 this[rs] = it[4]
