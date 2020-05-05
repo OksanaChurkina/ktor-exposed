@@ -4,15 +4,15 @@ import com.zaxxer.hikari.HikariDataSource
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
-import io.ktor.features.CallLogging
+import io.ktor.features.*
 import io.ktor.jackson.jackson
-import io.ktor.features.ContentNegotiation
-import io.ktor.features.DefaultHeaders
 import io.ktor.gson.gson
+import io.ktor.http.HttpStatusCode
 import io.ktor.locations.Location
 import io.ktor.locations.Locations
 import io.ktor.locations.get
 import io.ktor.response.respond
+import io.ktor.response.respondText
 import io.ktor.routing.Routing
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
@@ -59,13 +59,19 @@ fun Application.mainModule(){
     DbFactory.init()
     val tsvService = TsvService()
 
-    install(Routing) {
+    /**
+     * Если в запрос ввести неверные значения, исключение
+     * выбросит "RS-identifier not found"
+     */
 
+    install(Routing) {
 
         get<tsv>{
             tsv ->
-            val rs = tsvService.findBy(tsv.contig, tsv.leftInclusiveZeroBasedBoundary,  tsv.sequence, tsv.rightExclusiveZeroBasedBoundary)
-               call.respond(mapOf("RS-identifier" to rs))
+           try{ val rs = tsvService.findBy(tsv.contig, tsv.leftInclusiveZeroBasedBoundary,
+                   tsv.sequence, tsv.rightExclusiveZeroBasedBoundary)
+            call.respond(mapOf("RS-identifier" to rs))}
+           catch (e: Exception) {call.respondText { "RS-identifier not found" }}
         }
 }
 }
