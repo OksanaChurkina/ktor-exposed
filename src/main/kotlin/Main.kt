@@ -59,7 +59,7 @@ fun Application.mainModule(){
     DbFactory.init()
     val tsvService = TsvService()
 
-    /**
+    /*
      * Если в запрос ввести неверные значения, исключение
      * выбросит "RS-identifier not found"
      */
@@ -68,13 +68,13 @@ fun Application.mainModule(){
 
         get<tsv>{
             tsv ->
-           try{ val rs = tsvService.findBy(tsv.contig, tsv.leftInclusiveZeroBasedBoundary,
+           val rs = tsvService.findBy(tsv.contig, tsv.leftInclusiveZeroBasedBoundary,
                    tsv.sequence, tsv.rightExclusiveZeroBasedBoundary)
             call.respond(mapOf("RS-identifier" to rs))}
-           catch (e: Exception) {call.respondText { "RS-identifier not found" }}
+
         }
 }
-}
+
 
 fun main(){
     val port = 8080
